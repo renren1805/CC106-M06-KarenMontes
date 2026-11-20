@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from .models import Student
 
@@ -13,9 +14,48 @@ class StudentRegistrationWorkflowTests(TestCase):
         'contact_no': '5551234567',
     }
 
+    def test_staff_dashboard_is_in_registration_app_with_home_alias_preserved(self):
+        staff_user = get_user_model().objects.create_user(
+            username='dashboard-staff',
+            password='SafeTestPassword123!',
+            is_staff=True
+        )
+        self.client.force_login(staff_user)
+        response = self.client.get(reverse('staff_dashboard'))
+
+        self.assertEqual(
+            reverse('staff_dashboard'),
+            '/registration/dashboard/'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/dashboard.html')
+        self.assertEqual(self.client.get('/home/').status_code, 200)
+        self.assertContains(response, staff_user.username)
+        self.assertContains(response, reverse('student_list'))
+        self.assertContains(response, reverse('logout'))
+
+    def test_dashboard_requires_authenticated_staff(self):
+        dashboard_url = reverse('staff_dashboard')
+        login_redirect = f'{reverse("login")}?next={dashboard_url}'
+
+        anonymous_response = self.client.get(dashboard_url)
+        self.assertRedirects(anonymous_response, login_redirect)
+
+        regular_user = get_user_model().objects.create_user(
+            username='regular-user',
+            password='SafeTestPassword123!'
+        )
+        self.client.force_login(regular_user)
+        regular_response = self.client.get(dashboard_url)
+        self.assertRedirects(regular_response, login_redirect)
+
     def test_module_06_and_student_directory_routes(self):
         student = Student.objects.create(**self.student_data)
 
+        self.assertEqual(
+            reverse('staff_dashboard'),
+            '/registration/dashboard/'
+        )
         self.assertEqual(reverse('student_registration'), '/registration/')
         self.assertEqual(
             reverse('registration_success'),

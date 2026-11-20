@@ -1,8 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from .models import Student
 from .forms import StudentForm
+
+
+def staff_check(user):
+    return user.is_authenticated and user.is_staff
+
+
+@user_passes_test(staff_check, login_url='login')
+def staff_dashboard(request):
+    return render(request, 'registration/dashboard.html')
 
 
 def student_registration(request):
