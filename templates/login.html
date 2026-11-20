@@ -3,11 +3,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Log In</title>
+    <title>Staff Log In</title>
     <link rel="stylesheet" href="{% static 'registration/style.css' %}">
 </head>
 <body>
-    <h1>Log In</h1>
+    <h1>Student Management System</h1>
+    <br><br>
+    <h1>Staff Log In</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

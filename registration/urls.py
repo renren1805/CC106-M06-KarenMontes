@@ -8,28 +8,12 @@ urlpatterns = [
     path('students/', views.student_list, name='student_list'),
     path('students/create/', views.student_create, name='student_create'),
     path('students/<int:pk>/', views.student_detail, name='student_detail'),
-    path(
-        'students/<int:pk>/edit/',
-        views.student_update,
-        name='student_update'
-    ),
-    path(
-        'students/<int:pk>/delete/',
-        views.student_delete,
-        name='student_delete'
-    ),
-    path(
-        'register/',
-        views.student_registration,
-        name='student_registration_legacy'
-    ),
+    path('students/<int:pk>/edit/',views.student_update,name='student_update'),
+    path('students/<int:pk>/delete/',views.student_delete,name='student_delete'),
+    path('register/',views.student_registration, name='student_registration_legacy'),
     path('create/', views.student_create, name='student_create_legacy'),
     path('list/', views.student_list, name='student_list_legacy'),
-    path(
-        '<int:pk>/detail/',
-        views.student_detail,
-        name='student_detail_legacy'
-    ),
+    path('<int:pk>/detail/', views.student_detail, name='student_detail_legacy'),
     path(
         '<int:pk>/update/',
         views.student_update,

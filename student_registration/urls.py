@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from home import views
-from registration import views as registration_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -17,6 +16,6 @@ urlpatterns = [
         name='logout'
     ),
     path('', views.landing, name='landing'),
-    path('home/', registration_views.staff_dashboard, name='home'),
+    path('home/', views.home, name='home'),
     path('registration/', include('registration.urls')),
 ]

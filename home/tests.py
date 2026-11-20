@@ -13,6 +13,21 @@ class LoginFlowTests(TestCase):
             is_staff=True
         )
 
+    def test_home_page_matches_requested_design(self):
+        response = self.client.get(reverse('home'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home/home.html')
+        self.assertContains(response, "<h1>Girly's Home Page</h1>")
+        self.assertContains(
+            response,
+            'Welcome to my first Django application!'
+        )
+        self.assertContains(response, 'Staff Login')
+        self.assertContains(response, 'Back to Landing Page')
+        self.assertContains(response, reverse('login'))
+        self.assertContains(response, reverse('landing'))
+
     def test_login_page_uses_project_template(self):
         response = self.client.get(reverse('login'))
 
